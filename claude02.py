@@ -8,8 +8,7 @@ def load_and_color_split(pdb_file):
 
 
     # Load the PDB file and show all particles
-    cmd.load(pdb_file, "protein")
-    cmd.show("cartoon", "all")
+    cmd.load(pdb_file, "chromosomal_dna")
     #cmd.show("spheres", "all")
 
     # Change the background to white
@@ -18,27 +17,37 @@ def load_and_color_split(pdb_file):
     # Get the total number of atoms
     total_atoms = cmd.count_atoms("all")
     
-    # Calculate the midpoint
-    midpoint = total_atoms // 2
-
     print(f"Total atoms: {total_atoms}")
 
     # Color the first half red and the second half blue
-    cmd.select("first_half", f"index 1-{midpoint}")
-    cmd.select("second_half", f"index {midpoint+1}-{total_atoms}")
-
 
     cmd.select("centerline", f"index 1-389")
     cmd.select("tp_strand", f"index 390-778")
     cmd.select("fp_strand", f"index 779-1171")
 
+    cmd.hide("everything", "centerline")
 
-    cmd.color("red", "centerline")
+    #cmd.color("red", "centerline")
+    
+    # cmd.show("lines", "tp_strand")
+    # cmd.show("dots", "fp_strand")
+
+    # cmd.hide("lines", "tp_strand")
+    # cmd.hide("cartoon", "tp_strand")
+    cmd.hide("licorice", "tp_strand")
+    cmd.hide("licorice", "fp_strand")
+
+    #cmd.show("wire", "tp_strand")
+    cmd.show("sticks", "tp_strand")
+    cmd.show("sticks", "fp_strand")
+
     cmd.color("blue", "tp_strand")
     cmd.color("green", "fp_strand")
 
+    cmd.set("stick_radius", 0.15, "all")
 
-    cmd.color("yellow", "/protein//A/SSN`0/A4")
+
+    cmd.color("yellow", "/chromosomal_dna//A/SSN`0/A4")
 
 
     # Clear selections to clean up
@@ -58,7 +67,10 @@ def load_and_color_split(pdb_file):
     cmd.set_view(view)
 
     print(f"Loaded {pdb_file} with {total_atoms} atoms.")
-    print(f"First {midpoint} atoms colored red, remaining {total_atoms - midpoint} atoms colored blue.")
 
 # Replace 'your_structure.pdb' with the path to your actual PDB file
 load_and_color_split('data/two_nucs.pdb')
+
+cmd.set("ray_trace_mode", 1)  # Higher quality ray-tracing
+cmd.ray()
+cmd.png("high_quality_image.png", dpi=300, ray=1)
