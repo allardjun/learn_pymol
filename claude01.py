@@ -1,0 +1,1 @@
+cmd.bg_color("white")
