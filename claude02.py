@@ -19,35 +19,33 @@ def load_and_color_split(pdb_file):
     
     print(f"Total atoms: {total_atoms}")
 
-    # Color the first half red and the second half blue
-
+    # Centerline
     cmd.select("centerline", f"index 1-389")
+    cmd.hide("everything", "centerline")
+
+    # DNA
     cmd.select("tp_strand", f"index 390-778")
     cmd.select("fp_strand", f"index 779-1171")
 
-    cmd.hide("everything", "centerline")
-
-    #cmd.color("red", "centerline")
-    
-    # cmd.show("lines", "tp_strand")
-    # cmd.show("dots", "fp_strand")
-
-    # cmd.hide("lines", "tp_strand")
-    # cmd.hide("cartoon", "tp_strand")
     cmd.hide("licorice", "tp_strand")
     cmd.hide("licorice", "fp_strand")
 
-    #cmd.show("wire", "tp_strand")
     cmd.show("sticks", "tp_strand")
     cmd.show("sticks", "fp_strand")
 
-    cmd.color("blue", "tp_strand")
-    cmd.color("green", "fp_strand")
+    DNA_COLOR = "0x21409A"
+
+    cmd.color(DNA_COLOR, "tp_strand")
+    cmd.color(DNA_COLOR, "fp_strand")
 
     cmd.set("stick_radius", 0.15, "all")
 
+    # Nucleosomes
+    cmd.select("nucleosomes", "/chromosomal_dna//A/SSN`0/A4")
+    cmd.show("sphere", "nucleosomes")
+    cmd.color("0xEA0A8C", "nucleosomes")
+    cmd.set("sphere_scale", 1.7, "nucleosomes")
 
-    cmd.color("yellow", "/chromosomal_dna//A/SSN`0/A4")
 
 
     # Clear selections to clean up
@@ -71,6 +69,7 @@ def load_and_color_split(pdb_file):
 # Replace 'your_structure.pdb' with the path to your actual PDB file
 load_and_color_split('data/two_nucs.pdb')
 
-cmd.set("ray_trace_mode", 1)  # Higher quality ray-tracing
-cmd.ray()
-cmd.png("high_quality_image.png", dpi=300, ray=1)
+if True:
+    cmd.set("ray_trace_mode", 1)  # Higher quality ray-tracing
+    cmd.ray()
+    cmd.png("high_quality_image.png", dpi=300, ray=1)
