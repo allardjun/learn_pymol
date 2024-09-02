@@ -72,4 +72,4 @@ load_and_color_split('data/two_nucs.pdb')
 if True:
     cmd.set("ray_trace_mode", 1)  # Higher quality ray-tracing
     cmd.ray()
-    cmd.png("high_quality_image.png", dpi=300, ray=1)
+    cmd.png("figs/high_quality_image.png", dpi=300, ray=1)
